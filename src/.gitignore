@@ -1,0 +1,25 @@
+# Dependências (nunca envie esta pasta!)
+node_modules/
+
+# Build e Dist (arquivos gerados após o npm run build)
+dist/
+artifacts/
+
+# Variáveis de Ambiente (contêm senhas e chaves de API)
+.env
+.env.development
+.env.production
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testes
+/coverage
+/test-results
+
+# Configurações de IDE (opcional, mas recomendado)
+.vscode/
+.idea/
+.DS_Store
