@@ -5,11 +5,17 @@ export enum Currency {
   EUR = 'EUR',
 }
 
+export enum AccountType {
+  CHECKING = 'checking',
+  SAVINGS = 'savings',
+  CREDIT = 'credit',
+}
+
 export class Account {
   id: string;
   clientId: string;
   bankName: string;
-  type: 'checking' | 'savings' | 'credit';
+  type: AccountType;
   balance: number = 0;
   currency: Currency;
 
