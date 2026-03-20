@@ -11,17 +11,13 @@ export class TransactionsService {
   }
 
   findOne(id: string): Transaction | null {
-    const transaction = this._repository.findById(id);
-
-    if (!transaction) {
-      return null;
-    }
-
-    return transaction;
+    return this._repository.findById(id) || null;
   }
+
   create(description: string, amount: number): Transaction {
     let label = 'General';
     const descLower = description.toLowerCase();
+
     if (descLower.includes('tim hortons') || descLower.includes('starbucks')) {
       label = 'Coffee ☕';
     } else if (
@@ -30,6 +26,7 @@ export class TransactionsService {
     ) {
       label = 'Groceries 🛒';
     }
+
     const newTransaction = new Transaction({
       description,
       amount,
@@ -38,5 +35,17 @@ export class TransactionsService {
     });
 
     return this._repository.save(newTransaction);
+  }
+
+  update(id: string, data: Partial<Transaction>): Transaction | null {
+    const transaction = this.findOne(id);
+    if (!transaction) return null;
+
+    Object.assign(transaction, data);
+    return transaction;
+  }
+
+  remove(id: string): boolean {
+    return this._repository.delete(id);
   }
 }

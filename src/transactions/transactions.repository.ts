@@ -21,4 +21,16 @@ export class TransactionsRepository {
   findById(id: string): Transaction | undefined {
     return this._transactions.find((t) => t.id === id);
   }
+
+  delete(id: string): boolean {
+    const index = this._transactions.findIndex((t) => t.id === id);
+
+    if (index === -1) {
+      return false;
+    }
+
+    this._transactions.splice(index, 1);
+
+    return true;
+  }
 }

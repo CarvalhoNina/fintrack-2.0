@@ -1,11 +1,12 @@
-export class Clients {
+export class Client {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   address: string;
   password: string;
 
-  constructor(partial: Partial<Clients>) {
+  constructor(partial: Partial<Client>) {
     Object.assign(this, partial);
   }
 }
