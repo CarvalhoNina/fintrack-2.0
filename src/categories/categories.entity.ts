@@ -22,12 +22,8 @@ export enum CategorySubtype {
 
 export class Category {
   id: string;
-  clientId: string;
-  name: string;
   type: CategoryType;
   subtype: CategorySubtype;
-  icon?: string;
-  color?: string;
 
   constructor(partial: Partial<Category>) {
     Object.assign(this, partial);

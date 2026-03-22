@@ -22,8 +22,8 @@ export class AccountsRepository {
     return [...this._accounts];
   }
 
-  findOne(id: string): Account | null {
-    return this._repository.findById(id) || null;
+  findById(id: string): Account | undefined {
+    return this._accounts.find((t) => t.id === id);
   }
 
   delete(id: string): boolean {
