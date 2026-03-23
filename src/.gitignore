@@ -1,4 +1,4 @@
-# Dependências (nunca envie esta pasta!)
+# Dependências 
 node_modules/
 
 # Build e Dist (arquivos gerados após o npm run build)
