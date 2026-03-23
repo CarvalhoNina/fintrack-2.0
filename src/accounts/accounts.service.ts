@@ -6,14 +6,14 @@ import { Currency } from './account.entity';
 
 @Injectable()
 export class AccountsService {
-  constructor(private readonly _repository: AccountsRepository) {}
+  constructor(private readonly _accountsRepository: AccountsRepository) {}
 
   findAll(): Account[] {
-    return this._repository.findAll();
+    return this._accountsRepository.findAll();
   }
 
   findOne(id: string): Account | null {
-    const account = this._repository.findById(id);
+    const account = this._accountsRepository.findById(id);
 
     if (!account) {
       return null;
@@ -37,17 +37,17 @@ export class AccountsService {
       balance,
     });
 
-    return this._repository.save(newAccount);
+    return this._accountsRepository.save(newAccount);
   }
 
   remove(id: string): boolean {
-    const account = this._repository.findById(id);
+    const account = this._accountsRepository.findById(id);
 
     if (!account) {
       return false;
     }
 
-    return this._repository.delete(id);
+    return this._accountsRepository.delete(id);
   }
 
   update(id: string, data: Partial<Account>): Account | null {
@@ -59,6 +59,6 @@ export class AccountsService {
 
     Object.assign(account, data);
 
-    return this._repository.save(account);
+    return this._accountsRepository.save(account);
   }
 }

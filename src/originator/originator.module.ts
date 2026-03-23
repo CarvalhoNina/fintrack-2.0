@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
-import { OriginatorService } from './originator.service';
+import { OriginatorsService } from './originators.service';
+import { OriginatorsRepository } from './originators.repository';
+import { OriginatorsController } from './originators.controller';
 
 @Module({
-  providers: [OriginatorService]
+  controllers: [OriginatorsController],
+  providers: [OriginatorsService, OriginatorsRepository],
 })
-export class EstablishmentsModule {}
+export class OriginatorsModule {}

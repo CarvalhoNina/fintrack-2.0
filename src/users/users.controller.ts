@@ -12,16 +12,16 @@ import { User } from './user.entity';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly _service: UsersService) {}
+  constructor(private readonly _usersService: UsersService) {}
 
   @Get()
   findAll(): User[] {
-    return this._service.findAll();
+    return this._usersService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string): User | null {
-    return this._service.findOne(id);
+    return this._usersService.findOne(id);
   }
 
   @Post()
@@ -32,16 +32,22 @@ export class UsersController {
     @Body('address') address: string,
     @Body('password') password: string,
   ): User {
-    return this._service.create(firstName, lastName, address, email, password);
+    return this._usersService.create(
+      firstName,
+      lastName,
+      email,
+      address,
+      password,
+    );
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() data: Partial<User>): User | null {
-    return this._service.update(id, data);
+    return this._usersService.update(id, data);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string): boolean {
-    return this._service.remove(id);
+    return this._usersService.remove(id);
   }
 }

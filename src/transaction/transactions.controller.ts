@@ -26,10 +26,12 @@ export class TransactionsController {
 
   @Post()
   create(
-    @Body('description') description: string,
     @Body('amount') amount: number,
+    @Body('originatorId') originatorId: string,
+    @Body('accountId') accountId: string,
+    @Body('categoryId') categoryId: string,
   ): Transaction {
-    return this._service.create(description, amount);
+    return this._service.create(amount, originatorId, accountId, categoryId);
   }
 
   @Patch(':id')

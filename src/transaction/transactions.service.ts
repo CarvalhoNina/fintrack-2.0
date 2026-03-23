@@ -1,40 +1,57 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { TransactionsRepository } from './transactions.repository';
 import { Transaction } from './transaction.entity';
+import { OriginatorsRepository } from 'src/originator/originators.repository';
+import { AccountsRepository } from 'src/accounts/accounts.repository';
+import { CategoriesRepository } from 'src/categories/categories.repository';
 
 @Injectable()
 export class TransactionsService {
-  constructor(private readonly _repository: TransactionsRepository) {}
+  constructor(
+    private readonly _transactionsRepository: TransactionsRepository,
+    private readonly _originatorsRepository: OriginatorsRepository,
+    private readonly _accountsRepository: AccountsRepository,
+    private readonly _categoryRepository: CategoriesRepository,
+  ) {}
 
   findAll(): Transaction[] {
-    return this._repository.findAll();
+    return this._transactionsRepository.findAll();
   }
 
   findOne(id: string): Transaction | null {
-    return this._repository.findById(id) || null;
+    return this._transactionsRepository.findById(id) || null;
   }
 
-  create(description: string, amount: number): Transaction {
-    let label = 'General';
-    const descLower = description.toLowerCase();
+  create(
+    amount: number,
+    originatorId: string,
+    accountId: string,
+    categoryId: string,
+  ): Transaction {
+    const originator = this._originatorsRepository.findById(originatorId);
+    if (!originator) {
+      throw new NotFoundException('Originator não encontrado!');
+    }
 
-    if (descLower.includes('tim hortons') || descLower.includes('starbucks')) {
-      label = 'Coffee ☕';
-    } else if (
-      descLower.includes('walmart') ||
-      descLower.includes('no frills')
-    ) {
-      label = 'Groceries 🛒';
+    const account = this._accountsRepository.findById(accountId);
+    if (!account) {
+      throw new NotFoundException('Conta não encontrada!');
+    }
+
+    const category = this._categoryRepository.findById(categoryId);
+    if (!category) {
+      throw new NotFoundException('Categoria não encontrada!');
     }
 
     const newTransaction = new Transaction({
-      description,
       amount,
-      label,
-      currency: 'CAD',
+      originator,
+      account,
+      date: new Date(),
+      category,
     });
 
-    return this._repository.save(newTransaction);
+    return this._transactionsRepository.save(newTransaction);
   }
 
   update(id: string, data: Partial<Transaction>): Transaction | null {
@@ -46,6 +63,6 @@ export class TransactionsService {
   }
 
   remove(id: string): boolean {
-    return this._repository.delete(id);
+    return this._transactionsRepository.delete(id);
   }
 }

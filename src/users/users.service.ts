@@ -4,14 +4,14 @@ import { User } from './user.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly _repository: UsersRepository) {}
+  constructor(private readonly _usersRepository: UsersRepository) {}
 
   findAll(): User[] {
-    return this._repository.findAll();
+    return this._usersRepository.findAll();
   }
 
   findOne(id: string): User | null {
-    const user = this._repository.findById(id);
+    const user = this._usersRepository.findById(id);
 
     if (!user) {
       return null;
@@ -23,8 +23,8 @@ export class UsersService {
   create(
     firstName: string,
     lastName: string,
-    address: string,
     email: string,
+    address: string,
     password: string,
   ): User {
     const newUser = new User({
@@ -35,17 +35,17 @@ export class UsersService {
       password,
     });
 
-    return this._repository.save(newUser);
+    return this._usersRepository.save(newUser);
   }
 
   remove(id: string): boolean {
-    const user = this._repository.findById(id);
+    const user = this._usersRepository.findById(id);
 
     if (!user) {
       return false;
     }
 
-    return this._repository.delete(id);
+    return this._usersRepository.delete(id);
   }
 
   update(id: string, data: Partial<User>): User | null {
@@ -57,6 +57,6 @@ export class UsersService {
 
     Object.assign(user, data);
 
-    return this._repository.save(user);
+    return this._usersRepository.save(user);
   }
 }

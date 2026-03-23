@@ -12,16 +12,16 @@ import { Account, AccountType, Currency } from './account.entity';
 
 @Controller('accounts')
 export class AccountsController {
-  constructor(private readonly _service: AccountsService) {}
+  constructor(private readonly _accountsService: AccountsService) {}
 
   @Get()
   findAll(): Account[] {
-    return this._service.findAll();
+    return this._accountsService.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string): Account | null {
-    return this._service.findOne(id);
+    return this._accountsService.findOne(id);
   }
 
   @Post()
@@ -32,7 +32,13 @@ export class AccountsController {
     @Body('currency') currency: Currency,
     @Body('balance') balance?: number,
   ): Account {
-    return this._service.create(clientId, bankName, type, currency, balance);
+    return this._accountsService.create(
+      clientId,
+      bankName,
+      type,
+      currency,
+      balance,
+    );
   }
 
   @Patch(':id')
@@ -40,11 +46,11 @@ export class AccountsController {
     @Param('id') id: string,
     @Body() data: Partial<Account>,
   ): Account | null {
-    return this._service.update(id, data);
+    return this._accountsService.update(id, data);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string): boolean {
-    return this._service.remove(id);
+    return this._accountsService.remove(id);
   }
 }
