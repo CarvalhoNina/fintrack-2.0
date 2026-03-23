@@ -9,6 +9,8 @@ import {
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { Transaction } from './transaction.entity';
+import { CreateTransactionDto } from './DTO/create-transaction.dto';
+import { UpdateTransactionDto } from './DTO/update-transaction.dto';
 
 @Controller('transactions')
 export class TransactionsController {
@@ -25,21 +27,16 @@ export class TransactionsController {
   }
 
   @Post()
-  create(
-    @Body('amount') amount: number,
-    @Body('originatorId') originatorId: string,
-    @Body('accountId') accountId: string,
-    @Body('categoryId') categoryId: string,
-  ): Transaction {
-    return this._service.create(amount, originatorId, accountId, categoryId);
+  create(@Body() createTransactionDto: CreateTransactionDto): Transaction {
+    return this._service.create(createTransactionDto);
   }
 
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() data: Partial<Transaction>,
+    @Body() updateTransactionDto: UpdateTransactionDto,
   ): Transaction | null {
-    return this._service.update(id, data);
+    return this._service.update(id, updateTransactionDto);
   }
 
   @Delete(':id')

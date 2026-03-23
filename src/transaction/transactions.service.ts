@@ -4,6 +4,8 @@ import { Transaction } from './transaction.entity';
 import { OriginatorsRepository } from 'src/originator/originators.repository';
 import { AccountsRepository } from 'src/accounts/accounts.repository';
 import { CategoriesRepository } from 'src/categories/categories.repository';
+import { CreateTransactionDto } from './DTO/create-transaction.dto';
+import { UpdateTransactionDto } from './DTO/update-transaction.dto';
 
 @Injectable()
 export class TransactionsService {
@@ -22,44 +24,34 @@ export class TransactionsService {
     return this._transactionsRepository.findById(id) || null;
   }
 
-  create(
-    amount: number,
-    originatorId: string,
-    accountId: string,
-    categoryId: string,
-  ): Transaction {
-    const originator = this._originatorsRepository.findById(originatorId);
-    if (!originator) {
-      throw new NotFoundException('Originator não encontrado!');
-    }
+  create(dto: CreateTransactionDto): Transaction {
+    const originator = this._originatorsRepository.findById(dto.originatorId);
+    if (!originator) throw new NotFoundException('Originator não encontrado');
 
-    const account = this._accountsRepository.findById(accountId);
-    if (!account) {
-      throw new NotFoundException('Conta não encontrada!');
-    }
+    const account = this._accountsRepository.findById(dto.accountId);
+    if (!account) throw new NotFoundException('Conta não encontrada');
 
-    const category = this._categoryRepository.findById(categoryId);
-    if (!category) {
-      throw new NotFoundException('Categoria não encontrada!');
-    }
+    const category = this._categoryRepository.findById(dto.categoryId);
+    if (!category) throw new NotFoundException('Categoria não encontrada');
 
     const newTransaction = new Transaction({
-      amount,
+      amount: dto.amount,
+      date: dto.date ? new Date(dto.date) : new Date(),
       originator,
       account,
-      date: new Date(),
       category,
     });
 
     return this._transactionsRepository.save(newTransaction);
   }
 
-  update(id: string, data: Partial<Transaction>): Transaction | null {
+  update(id: string, dto: UpdateTransactionDto): Transaction | null {
     const transaction = this.findOne(id);
     if (!transaction) return null;
 
-    Object.assign(transaction, data);
-    return transaction;
+    Object.assign(transaction, dto);
+
+    return this._transactionsRepository.save(transaction);
   }
 
   remove(id: string): boolean {

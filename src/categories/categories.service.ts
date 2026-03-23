@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { CategoriesRepository } from './categories.repository';
 import { Category } from './categories.entity';
-import { CategoryType } from './categories.entity';
-import { CategorySubtype } from './categories.entity';
+import { CreateCategoryDto } from './DTO/create-category.dto';
+import { UpdateCategoryDto } from './DTO/update-category.dto';
 
 @Injectable()
 export class CategoriesService {
@@ -22,13 +22,24 @@ export class CategoriesService {
     return account;
   }
 
-  create(type: CategoryType, subtype: CategorySubtype): Category {
+  create(dto: CreateCategoryDto): Category {
     const newCategory = new Category({
-      type,
-      subtype,
+      ...dto,
     });
 
     return this._categoriesRepository.save(newCategory);
+  }
+
+  update(id: string, dto: UpdateCategoryDto): Category | null {
+    const category = this.findOne(id);
+
+    if (!category) {
+      return null;
+    }
+
+    Object.assign(category, dto);
+
+    return this._categoriesRepository.save(category);
   }
 
   remove(id: string): boolean {
@@ -39,17 +50,5 @@ export class CategoriesService {
     }
 
     return this._categoriesRepository.delete(id);
-  }
-
-  update(id: string, data: Partial<Category>): Category | null {
-    const category = this.findOne(id);
-
-    if (!category) {
-      return null;
-    }
-
-    Object.assign(category, data);
-
-    return this._categoriesRepository.save(category);
   }
 }

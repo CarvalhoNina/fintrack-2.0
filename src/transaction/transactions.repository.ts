@@ -8,9 +8,18 @@ export class TransactionsRepository {
   save(transaction: Transaction): Transaction {
     if (!transaction.id) {
       transaction.id = Math.random().toString(36).substring(7);
+      this._transactions.push(transaction);
+      return transaction;
     }
 
-    this._transactions.push(transaction);
+    const index = this._transactions.findIndex((t) => t.id === transaction.id);
+
+    if (index !== -1) {
+      this._transactions[index] = transaction;
+    } else {
+      this._transactions.push(transaction);
+    }
+
     return transaction;
   }
 

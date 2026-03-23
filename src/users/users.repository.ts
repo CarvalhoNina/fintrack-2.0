@@ -8,9 +8,13 @@ export class UsersRepository {
   save(user: User): User {
     if (!user.id) {
       user.id = Math.random().toString(36).substring(7);
+      this._users.push(user);
+    } else {
+      const index = this._users.findIndex((u) => u.id === user.id);
+      if (index !== -1) {
+        this._users[index] = user;
+      }
     }
-
-    this._users.push(user);
     return user;
   }
 

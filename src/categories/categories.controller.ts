@@ -8,7 +8,9 @@ import {
   Post,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
-import { Category, CategorySubtype, CategoryType } from './categories.entity';
+import { Category } from './categories.entity';
+import { CreateCategoryDto } from './DTO/create-category.dto';
+import { UpdateCategoryDto } from './DTO/update-category.dto';
 
 @Controller('categories')
 export class CategoriesController {
@@ -25,19 +27,16 @@ export class CategoriesController {
   }
 
   @Post()
-  create(
-    @Body('type') type: CategoryType,
-    @Body('subtype') subtype: CategorySubtype,
-  ): Category {
-    return this._categoriesService.create(type, subtype);
+  create(@Body() createCategoryDto: CreateCategoryDto): Category {
+    return this._categoriesService.create(createCategoryDto);
   }
 
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() data: Partial<Category>,
+    @Body() updateCategoryDTO: UpdateCategoryDto,
   ): Category | null {
-    return this._categoriesService.update(id, data);
+    return this._categoriesService.update(id, updateCategoryDTO);
   }
 
   @Delete(':id')

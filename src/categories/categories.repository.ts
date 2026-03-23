@@ -8,9 +8,13 @@ export class CategoriesRepository {
   save(category: Category): Category {
     if (!category.id) {
       category.id = Math.random().toString(36).substring(7);
+      this._categories.push(category);
+    } else {
+      const index = this._categories.findIndex((c) => c.id === category.id);
+      if (index !== -1) {
+        this._categories[index] = category;
+      }
     }
-
-    this._categories.push(category);
     return category;
   }
 

@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { User } from './user.entity';
+import { CreateUserDto } from './DTO/create-user.dto';
+import { UpdateUserDto } from './DTO/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -20,22 +22,24 @@ export class UsersService {
     return user;
   }
 
-  create(
-    firstName: string,
-    lastName: string,
-    email: string,
-    address: string,
-    password: string,
-  ): User {
+  create(dto: CreateUserDto): User {
     const newUser = new User({
-      firstName,
-      lastName,
-      email: email.toLowerCase(),
-      address,
-      password,
+      ...dto,
     });
 
     return this._usersRepository.save(newUser);
+  }
+
+  update(id: string, dto: UpdateUserDto): User | null {
+    const user = this.findOne(id);
+
+    if (!user) {
+      return null;
+    }
+
+    Object.assign(user, dto);
+
+    return this._usersRepository.save(user);
   }
 
   remove(id: string): boolean {
@@ -46,17 +50,5 @@ export class UsersService {
     }
 
     return this._usersRepository.delete(id);
-  }
-
-  update(id: string, data: Partial<User>): User | null {
-    const user = this.findOne(id);
-
-    if (!user) {
-      return null;
-    }
-
-    Object.assign(user, data);
-
-    return this._usersRepository.save(user);
   }
 }

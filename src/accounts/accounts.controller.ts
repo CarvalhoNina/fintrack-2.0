@@ -8,7 +8,9 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
-import { Account, AccountType, Currency } from './account.entity';
+import { Account } from './account.entity';
+import { CreateAccountDto } from './DTO/create-account.dto';
+import { UpdateAccountDto } from './DTO/update-account.dto';
 
 @Controller('accounts')
 export class AccountsController {
@@ -25,28 +27,16 @@ export class AccountsController {
   }
 
   @Post()
-  create(
-    @Body('clientId') clientId: string,
-    @Body('bankName') bankName: string,
-    @Body('type') type: AccountType,
-    @Body('currency') currency: Currency,
-    @Body('balance') balance?: number,
-  ): Account {
-    return this._accountsService.create(
-      clientId,
-      bankName,
-      type,
-      currency,
-      balance,
-    );
+  create(@Body() createAccountDto: CreateAccountDto): Account {
+    return this._accountsService.create(createAccountDto);
   }
 
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() data: Partial<Account>,
-  ): Account | null {
-    return this._accountsService.update(id, data);
+    @Body() updateAccountDto: UpdateAccountDto,
+  ): Account {
+    return this._accountsService.update(id, updateAccountDto);
   }
 
   @Delete(':id')

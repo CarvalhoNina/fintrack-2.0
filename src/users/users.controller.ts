@@ -9,6 +9,8 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
+import { CreateUserDto } from './DTO/create-user.dto';
+import { UpdateUserDto } from './DTO/update-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -25,25 +27,13 @@ export class UsersController {
   }
 
   @Post()
-  create(
-    @Body('firstName') firstName: string,
-    @Body('lastName') lastName: string,
-    @Body('email') email: string,
-    @Body('address') address: string,
-    @Body('password') password: string,
-  ): User {
-    return this._usersService.create(
-      firstName,
-      lastName,
-      email,
-      address,
-      password,
-    );
+  create(@Body() createUserDTO: CreateUserDto): User {
+    return this._usersService.create(createUserDTO);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() data: Partial<User>): User | null {
-    return this._usersService.update(id, data);
+  update(@Param('id') id: string, @Body() dto: UpdateUserDto): User | null {
+    return this._usersService.update(id, dto);
   }
 
   @Delete(':id')

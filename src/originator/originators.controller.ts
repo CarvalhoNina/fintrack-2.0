@@ -7,12 +7,14 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { Originator } from './originator.entity.ts';
-import { Category } from 'src/categories/categories.entity';
+import { Originator } from './originator.entity';
+import { CreateOriginatorDto } from './DTO/create-originator.dto.js';
+import { UpdateOriginatorDto } from './DTO/update-originator.dto.js';
+import { OriginatorsService } from './originators.service.js';
 
 @Controller('originator')
 export class OriginatorsController {
-  constructor(private readonly _originatorsService: OriginatorsController) {}
+  constructor(private readonly _originatorsService: OriginatorsService) {}
 
   @Get()
   findAll(): Originator[] {
@@ -25,20 +27,16 @@ export class OriginatorsController {
   }
 
   @Post()
-  create(
-    @Body('longName') longName: string,
-    @Body('shortName') shortName: string,
-    @Body('category') category: Category,
-  ): Originator {
-    return this._originatorsService.create(longName, shortName, category);
+  create(@Body() createOriginatorDTO: CreateOriginatorDto): Originator {
+    return this._originatorsService.create(createOriginatorDTO);
   }
 
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() data: Partial<Originator>,
+    @Body() updateOriginatorDTO: UpdateOriginatorDto,
   ): Originator | null {
-    return this._originatorsService.update(id, data);
+    return this._originatorsService.update(id, updateOriginatorDTO);
   }
 
   @Delete(':id')
