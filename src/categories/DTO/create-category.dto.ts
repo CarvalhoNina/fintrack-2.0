@@ -1,5 +1,5 @@
 import { IsEnum } from 'class-validator';
-import { CategoryType, CategorySubtype } from '../categories.entity';
+import { CategorySubtype, CategoryType } from '../categories.schema';
 
 export class CreateCategoryDto {
   @IsEnum(CategoryType, {

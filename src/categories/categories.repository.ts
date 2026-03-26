@@ -1,40 +1,39 @@
 import { Injectable } from '@nestjs/common';
-import { Category } from './categories.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Category, CategoryDocument } from './categories.schema';
+import { Model } from 'mongoose';
+import { CreateCategoryDto } from './DTO/create-category.dto';
+import { UpdateCategoryDto } from './DTO/update-category.dto';
 
 @Injectable()
 export class CategoriesRepository {
-  private readonly _categories: Category[] = [];
+  constructor(
+    @InjectModel(Category.name)
+    private readonly _categoryModel: Model<CategoryDocument>,
+  ) {}
 
-  save(category: Category): Category {
-    if (!category.id) {
-      category.id = Math.random().toString(36).substring(7);
-      this._categories.push(category);
-    } else {
-      const index = this._categories.findIndex((c) => c.id === category.id);
-      if (index !== -1) {
-        this._categories[index] = category;
-      }
-    }
-    return category;
+  async save(dto: CreateCategoryDto): Promise<CategoryDocument> {
+    const createdCategory = new this._categoryModel(dto);
+    return await createdCategory.save();
   }
 
-  findAll(): Category[] {
-    return [...this._categories];
+  async findAll(): Promise<CategoryDocument[]> {
+    return await this._categoryModel.find().exec();
   }
 
-  findById(id: string): Category | undefined {
-    return this._categories.find((t) => t.id === id);
+  async findById(id: string): Promise<CategoryDocument | null> {
+    return await this._categoryModel.findById(id).exec();
   }
 
-  delete(id: string): boolean {
-    const index = this._categories.findIndex((t) => t.id === id);
+  async update(
+    id: string,
+    dto: UpdateCategoryDto,
+  ): Promise<CategoryDocument | null> {
+    return this._categoryModel.findByIdAndUpdate(id, dto, { new: true }).exec();
+  }
 
-    if (index === -1) {
-      return false;
-    }
-
-    this._categories.splice(index, 1);
-
-    return true;
+  async delete(id: string): Promise<boolean> {
+    const result = await this._categoryModel.findByIdAndDelete(id).exec();
+    return !!result;
   }
 }

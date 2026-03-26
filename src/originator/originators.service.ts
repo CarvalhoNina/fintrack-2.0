@@ -9,39 +9,56 @@ import { CategoriesRepository } from 'src/categories/categories.repository';
 export class OriginatorsService {
   constructor(
     private readonly _originatorsRepository: OriginatorsRepository,
-    private readonly _categoryRepository: CategoriesRepository,
+    private readonly _categoriesRepository: CategoriesRepository,
   ) {}
 
-  findAll(): Originator[] {
-    return this._originatorsRepository.findAll();
+  async findAll(): Promise<Originator[]> {
+    return await this._originatorsRepository.findAll();
   }
 
-  findOne(id: string): Originator | null {
-    return this._originatorsRepository.findById(id) || null;
+  async findOne(id: string): Promise<Originator | null> {
+    const originator = await this._originatorsRepository.findById(id);
+    if (!originator) {
+      throw new NotFoundException(`Originator com ID ${id} não encontrado`);
+    }
+    return originator;
   }
 
-  create(dto: CreateOriginatorDto): Originator {
-    const category = this._categoryRepository.findById(dto.categoryId);
-    if (!category) throw new NotFoundException('Categoria não encontrada');
+  async create(dto: CreateOriginatorDto): Promise<Originator> {
+    const category = await this._categoriesRepository.findById(dto.categoryId);
+    if (!category) {
+      throw new NotFoundException(`A categoria informada não existe`);
+    }
 
-    const newOriginator = new Originator({
-      longName: dto.longName,
-      shortName: dto.shortName,
-      category,
-    });
-
-    return this._originatorsRepository.save(newOriginator);
+    return await this._originatorsRepository.save(dto);
   }
 
-  update(id: string, dto: UpdateOriginatorDto): Originator | null {
-    const originator = this.findOne(id);
-    if (!originator) return null;
+  async update(
+    id: string,
+    dto: UpdateOriginatorDto,
+  ): Promise<Originator | null> {
+    await this.findOne(id);
+    const newCategoryIdProvided = dto.categoryId;
 
-    Object.assign(originator, dto);
-    return this._originatorsRepository.save(originator);
+    if (newCategoryIdProvided) {
+      const categoryFoundInDb = await this._categoriesRepository.findById(
+        newCategoryIdProvided,
+      );
+
+      const categoryExists = categoryFoundInDb !== null;
+
+      if (!categoryExists) {
+        throw new NotFoundException(
+          `Update cancelled: The category ID '${newCategoryIdProvided}' was not found in the system.`,
+        );
+      }
+    }
+
+    return await this._originatorsRepository.update(id, dto);
   }
 
-  remove(id: string): boolean {
+  async remove(id: string): Promise<boolean> {
+    await this.findOne(id);
     return this._originatorsRepository.delete(id);
   }
 }

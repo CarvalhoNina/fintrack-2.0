@@ -7,40 +7,42 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { Originator } from './originator.entity';
 import { CreateOriginatorDto } from './DTO/create-originator.dto.js';
 import { UpdateOriginatorDto } from './DTO/update-originator.dto.js';
 import { OriginatorsService } from './originators.service.js';
+import { Originator } from './originator.schema.js';
 
 @Controller('originator')
 export class OriginatorsController {
   constructor(private readonly _originatorsService: OriginatorsService) {}
 
   @Get()
-  findAll(): Originator[] {
-    return this._originatorsService.findAll();
+  async findAll(): Promise<Originator[]> {
+    return await this._originatorsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Originator | null {
-    return this._originatorsService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<Originator | null> {
+    return await this._originatorsService.findOne(id);
   }
 
   @Post()
-  create(@Body() createOriginatorDTO: CreateOriginatorDto): Originator {
-    return this._originatorsService.create(createOriginatorDTO);
+  async create(
+    @Body() createOriginatorDTO: CreateOriginatorDto,
+  ): Promise<Originator> {
+    return await this._originatorsService.create(createOriginatorDTO);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateOriginatorDTO: UpdateOriginatorDto,
-  ): Originator | null {
-    return this._originatorsService.update(id, updateOriginatorDTO);
+  ): Promise<Originator | null> {
+    return await this._originatorsService.update(id, updateOriginatorDTO);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): boolean {
-    return this._originatorsService.remove(id);
+  async remove(@Param('id') id: string): Promise<boolean> {
+    return await this._originatorsService.remove(id);
   }
 }

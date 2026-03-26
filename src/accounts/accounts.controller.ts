@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AccountsService } from './accounts.service';
-import { Account } from './account.entity';
+import { Account } from './accounts.schema';
 import { CreateAccountDto } from './DTO/create-account.dto';
 import { UpdateAccountDto } from './DTO/update-account.dto';
 
@@ -17,30 +17,30 @@ export class AccountsController {
   constructor(private readonly _accountsService: AccountsService) {}
 
   @Get()
-  findAll(): Account[] {
-    return this._accountsService.findAll();
+  async findAll(): Promise<Account[]> {
+    return await this._accountsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Account | null {
-    return this._accountsService.findOne(id);
+  async findOne(@Param('id') id: string): Promise<Account | null> {
+    return await this._accountsService.findOne(id);
   }
 
   @Post()
-  create(@Body() createAccountDto: CreateAccountDto): Account {
-    return this._accountsService.create(createAccountDto);
+  async create(@Body() createAccountDto: CreateAccountDto): Promise<Account> {
+    return await this._accountsService.create(createAccountDto);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateAccountDto: UpdateAccountDto,
-  ): Account {
-    return this._accountsService.update(id, updateAccountDto);
+  ): Promise<Account> {
+    return await this._accountsService.update(id, updateAccountDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): boolean {
-    return this._accountsService.remove(id);
+  async remove(@Param('id') id: string): Promise<boolean> {
+    return await this._accountsService.remove(id);
   }
 }

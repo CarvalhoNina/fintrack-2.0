@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateOriginatorDto {
   @IsString()
@@ -8,7 +8,7 @@ export class CreateOriginatorDto {
   @IsString()
   shortName: string;
 
-  @IsUUID('4', { message: 'O ID da categoria deve ser um UUID válido' })
+  @IsMongoId({ message: 'O ID da categoria deve ser um ObjectId válido' })
   @IsNotEmpty({ message: 'A categoria é obrigatória' })
   categoryId: string;
 }

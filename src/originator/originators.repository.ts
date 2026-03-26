@@ -1,36 +1,50 @@
 import { Injectable } from '@nestjs/common';
-import { Originator } from './originator.entity.ts';
+import { Originator, OriginatorDocument } from './originator.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { CreateOriginatorDto } from './DTO/create-originator.dto';
+import { UpdateOriginatorDto } from './DTO/update-originator.dto';
 
 @Injectable()
 export class OriginatorsRepository {
-  private readonly _originators: Originator[] = [];
+  constructor(
+    @InjectModel(Originator.name)
+    private readonly _originatorModel: Model<OriginatorDocument>,
+  ) {}
 
-  save(originator: Originator): Originator {
-    if (!originator.id) {
-      originator.id = Math.random().toString(36).substring(7);
-    }
-
-    this._originators.push(originator);
-    return originator;
+  async save(dto: CreateOriginatorDto): Promise<OriginatorDocument> {
+    const createdOriginator = new this._originatorModel({
+      _longName: dto.longName,
+      _shortName: dto.shortName,
+      _category: dto.categoryId,
+    });
+    return await createdOriginator.save();
   }
 
-  findAll(): Originator[] {
-    return [...this._originators];
+  async findAll(): Promise<OriginatorDocument[]> {
+    return await this._originatorModel.find().populate('_category').exec();
   }
 
-  findById(id: string): Originator | undefined {
-    return this._originators.find((t) => t.id === id);
+  async findById(id: string): Promise<OriginatorDocument | null> {
+    return await this._originatorModel.findById(id).exec();
   }
 
-  delete(id: string): boolean {
-    const index = this._originators.findIndex((t) => t.id === id);
+  async update(
+    id: string,
+    dto: UpdateOriginatorDto,
+  ): Promise<OriginatorDocument | null> {
+    const updateData = {
+      ...(dto.longName && { _longName: dto.longName }),
+      ...(dto.shortName && { _shortName: dto.shortName }),
+      ...(dto.categoryId && { _category: dto.categoryId }),
+    };
+    return await this._originatorModel
+      .findByIdAndUpdate(id, updateData, { new: true })
+      .exec();
+  }
 
-    if (index === -1) {
-      return false;
-    }
-
-    this._originators.splice(index, 1);
-
-    return true;
+  async delete(id: string): Promise<boolean> {
+    const result = await this._originatorModel.findByIdAndDelete(id).exec();
+    return !!result;
   }
 }

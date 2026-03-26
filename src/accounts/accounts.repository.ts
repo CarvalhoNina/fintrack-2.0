@@ -1,40 +1,41 @@
 import { Injectable } from '@nestjs/common';
-import { Account } from './account.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { Account, AccountDocument } from './accounts.schema';
+import { CreateAccountDto } from './DTO/create-account.dto';
+import { UpdateAccountDto } from './DTO/update-account.dto';
 
 @Injectable()
 export class AccountsRepository {
-  private readonly _accounts: Account[] = [];
+  constructor(
+    @InjectModel(Account.name)
+    private readonly _accountModel: Model<AccountDocument>,
+  ) {}
 
-  save(account: Account): Account {
-    if (!account.id) {
-      account.id = Math.random().toString(36).substring(7);
-      this._accounts.push(account);
-    } else {
-      const index = this._accounts.findIndex((a) => a.id === account.id);
-      if (index !== -1) {
-        this._accounts[index] = account;
-      }
-    }
-    return account;
+  async save(dto: CreateAccountDto): Promise<AccountDocument> {
+    const createdAccount = new this._accountModel(dto);
+    return await createdAccount.save();
   }
 
-  findAll(): Account[] {
-    return [...this._accounts];
+  async findAll(): Promise<AccountDocument[]> {
+    return await this._accountModel.find().exec();
   }
 
-  findById(id: string): Account | undefined {
-    return this._accounts.find((t) => t.id === id);
+  async findById(id: string): Promise<AccountDocument | null> {
+    return await this._accountModel.findById(id).exec();
   }
 
-  delete(id: string): boolean {
-    const index = this._accounts.findIndex((client) => client.id === id);
+  async update(
+    id: string,
+    dto: UpdateAccountDto,
+  ): Promise<AccountDocument | null> {
+    return await this._accountModel
+      .findByIdAndUpdate(id, dto, { new: true })
+      .exec();
+  }
 
-    if (index === -1) {
-      return false;
-    }
-
-    this._accounts.splice(index, 1);
-
-    return true;
+  async delete(id: string): Promise<boolean> {
+    const result = await this._accountModel.findByIdAndDelete(id).exec();
+    return !!result;
   }
 }
