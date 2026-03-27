@@ -13,33 +13,25 @@ export class OriginatorsRepository {
   ) {}
 
   async save(dto: CreateOriginatorDto): Promise<OriginatorDocument> {
-    const createdOriginator = new this._originatorModel({
-      _longName: dto.longName,
-      _shortName: dto.shortName,
-      _category: dto.categoryId,
-    });
+    const createdOriginator = new this._originatorModel(dto);
     return await createdOriginator.save();
   }
 
   async findAll(): Promise<OriginatorDocument[]> {
-    return await this._originatorModel.find().populate('_category').exec();
+    return await this._originatorModel.find().populate('category').exec();
   }
 
   async findById(id: string): Promise<OriginatorDocument | null> {
-    return await this._originatorModel.findById(id).exec();
+    return await this._originatorModel.findById(id).populate('category').exec();
   }
 
   async update(
     id: string,
     dto: UpdateOriginatorDto,
   ): Promise<OriginatorDocument | null> {
-    const updateData = {
-      ...(dto.longName && { _longName: dto.longName }),
-      ...(dto.shortName && { _shortName: dto.shortName }),
-      ...(dto.categoryId && { _category: dto.categoryId }),
-    };
     return await this._originatorModel
-      .findByIdAndUpdate(id, updateData, { new: true })
+      .findByIdAndUpdate(id, dto, { new: true })
+      .populate('category')
       .exec();
   }
 

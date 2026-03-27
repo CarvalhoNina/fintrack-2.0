@@ -1,2 +1,2 @@
-export declare class EstablishmentsModule {
+export declare class OriginatorsModule {
 }

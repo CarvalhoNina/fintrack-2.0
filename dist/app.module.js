@@ -14,14 +14,17 @@ const users_module_1 = require("./users/users.module");
 const categories_module_1 = require("./categories/categories.module");
 const auth_module_1 = require("./auth/auth.module");
 const dashboards_module_1 = require("./dashboards/dashboards.module");
+const mongoose_1 = require("@nestjs/mongoose");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            mongoose_1.MongooseModule.forRoot('mongodb://localhost:27017/fintrack'),
+            users_module_1.UsersModule,
             transaction_module_1.TransactionModule,
-            users_module_1.ClientsModule,
+            users_module_1.UsersModule,
             accounts_module_1.AccountsModule,
             categories_module_1.CategoriesModule,
             auth_module_1.AuthModule,

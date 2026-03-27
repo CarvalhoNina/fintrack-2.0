@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { OriginatorsRepository } from './originators.repository';
-import { Originator } from './originator.entity';
 import { UpdateOriginatorDto } from './DTO/update-originator.dto';
 import { CreateOriginatorDto } from './DTO/create-originator.dto';
 import { CategoriesRepository } from 'src/categories/categories.repository';
+import { Originator } from './originator.schema';
 
 @Injectable()
 export class OriginatorsService {

@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { TransactionsRepository } from './transactions.repository';
-import { Transaction } from './transaction.entity';
 import { OriginatorsRepository } from 'src/originator/originators.repository';
 import { AccountsRepository } from 'src/accounts/accounts.repository';
 import { CategoriesRepository } from 'src/categories/categories.repository';
 import { CreateTransactionDto } from './DTO/create-transaction.dto';
 import { UpdateTransactionDto } from './DTO/update-transaction.dto';
+import { Transaction } from './transaction.schema';
 
 @Injectable()
 export class TransactionsService {
@@ -16,45 +16,48 @@ export class TransactionsService {
     private readonly _categoryRepository: CategoriesRepository,
   ) {}
 
-  findAll(): Transaction[] {
-    return this._transactionsRepository.findAll();
+  async findAll(): Promise<Transaction[]> {
+    return await this._transactionsRepository.findAll();
   }
 
-  findOne(id: string): Transaction | null {
-    return this._transactionsRepository.findById(id) || null;
+  async findOne(id: string): Promise<Transaction | null> {
+    return (await this._transactionsRepository.findById(id)) || null;
   }
 
-  create(dto: CreateTransactionDto): Transaction {
-    const originator = this._originatorsRepository.findById(dto.originatorId);
-    if (!originator) throw new NotFoundException('Originator não encontrado');
+  async create(dto: CreateTransactionDto): Promise<Transaction> {
+    const originator = await this._originatorsRepository.findById(
+      dto.originatorId,
+    );
+    if (!originator) {
+      throw new NotFoundException('O Originator informado não existe.');
+    }
 
-    const account = this._accountsRepository.findById(dto.accountId);
-    if (!account) throw new NotFoundException('Conta não encontrada');
+    const account = await this._accountsRepository.findById(dto.accountId);
+    if (!account) {
+      throw new NotFoundException('A conta informada não existe.');
+    }
 
-    const category = this._categoryRepository.findById(dto.categoryId);
-    if (!category) throw new NotFoundException('Categoria não encontrada');
+    const category = await this._categoryRepository.findById(dto.categoryId);
+    if (!category) {
+      throw new NotFoundException('A categoria informada não existe.');
+    }
 
-    const newTransaction = new Transaction({
-      amount: dto.amount,
-      date: dto.date ? new Date(dto.date) : new Date(),
-      originator,
-      account,
-      category,
-    });
-
-    return this._transactionsRepository.save(newTransaction);
+    return await this._transactionsRepository.save(dto);
   }
 
-  update(id: string, dto: UpdateTransactionDto): Transaction | null {
-    const transaction = this.findOne(id);
-    if (!transaction) return null;
+  async update(
+    id: string,
+    dto: UpdateTransactionDto,
+  ): Promise<Transaction | null> {
+    const transaction = await this.findOne(id);
+    if (!transaction) {
+      throw new NotFoundException('Transação não encontrada.');
+    }
 
-    Object.assign(transaction, dto);
-
-    return this._transactionsRepository.save(transaction);
+    return await this._transactionsRepository.update(id, dto);
   }
 
-  remove(id: string): boolean {
+  async remove(id: string): Promise<boolean> {
     return this._transactionsRepository.delete(id);
   }
 }

@@ -18,36 +18,20 @@ export type AccountDocument = HydratedDocument<Account>;
 
 @Schema({ timestamps: true })
 export class Account {
-  @Prop({ name: 'clientId', required: true })
-  private _clientId: string;
+  @Prop({ required: true })
+  clientId: string;
 
-  @Prop({ name: 'bankName', required: true })
-  private _bankName: string;
+  @Prop({ required: true })
+  bankName: string;
 
   @Prop({ required: true, enum: AccountType })
-  private _type: AccountType;
+  type: AccountType;
 
-  @Prop({ name: 'balance', default: 0 })
-  private _balance: number;
+  @Prop({ default: 0 })
+  balance: number;
 
-  @Prop({ name: 'currency', required: true, enum: Currency })
-  private _currency: Currency;
-
-  get clientId(): string {
-    return this._clientId;
-  }
-  get bankName(): string {
-    return this._bankName;
-  }
-  get type(): AccountType {
-    return this._type;
-  }
-  get balance(): number {
-    return this._balance;
-  }
-  get currency(): Currency {
-    return this._currency;
-  }
+  @Prop({ required: true, enum: Currency })
+  currency: Currency;
 }
 
 export const AccountSchema = SchemaFactory.createForClass(Account);

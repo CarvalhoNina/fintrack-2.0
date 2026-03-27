@@ -15,64 +15,64 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransactionsController = void 0;
 const common_1 = require("@nestjs/common");
 const transactions_service_1 = require("./transactions.service");
-const transaction_entity_1 = require("./transaction.entity");
+const create_transaction_dto_1 = require("./DTO/create-transaction.dto");
+const update_transaction_dto_1 = require("./DTO/update-transaction.dto");
 let TransactionsController = class TransactionsController {
-    _service;
-    constructor(_service) {
-        this._service = _service;
+    _transactionsService;
+    constructor(_transactionsService) {
+        this._transactionsService = _transactionsService;
     }
-    findAll() {
-        return this._service.findAll();
+    async create(createTransactionDto) {
+        return await this._transactionsService.create(createTransactionDto);
     }
-    findOne(id) {
-        return this._service.findOne(id);
+    async findAll() {
+        return await this._transactionsService.findAll();
     }
-    create(description, amount) {
-        return this._service.create(description, amount);
+    async findOne(id) {
+        return await this._transactionsService.findOne(id);
     }
-    update(id, data) {
-        return this._service.update(id, data);
+    async update(id, updateTransactionDto) {
+        return await this._transactionsService.update(id, updateTransactionDto);
     }
-    remove(id) {
-        return this._service.remove(id);
+    async remove(id) {
+        return await this._transactionsService.remove(id);
     }
 };
 exports.TransactionsController = TransactionsController;
 __decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_transaction_dto_1.CreateTransactionDto]),
+    __metadata("design:returntype", Promise)
+], TransactionsController.prototype, "create", null);
+__decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Array)
+    __metadata("design:returntype", Promise)
 ], TransactionsController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Object)
+    __metadata("design:returntype", Promise)
 ], TransactionsController.prototype, "findOne", null);
-__decorate([
-    (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)('description')),
-    __param(1, (0, common_1.Body)('amount')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Number]),
-    __metadata("design:returntype", transaction_entity_1.Transaction)
-], TransactionsController.prototype, "create", null);
 __decorate([
     (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", Object)
+    __metadata("design:paramtypes", [String, update_transaction_dto_1.UpdateTransactionDto]),
+    __metadata("design:returntype", Promise)
 ], TransactionsController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Boolean)
+    __metadata("design:returntype", Promise)
 ], TransactionsController.prototype, "remove", null);
 exports.TransactionsController = TransactionsController = __decorate([
     (0, common_1.Controller)('transactions'),

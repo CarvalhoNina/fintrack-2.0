@@ -1,15 +1,15 @@
 import {
   IsEnum,
+  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
   IsString,
-  IsUUID,
 } from 'class-validator';
-import { AccountType, Currency } from '../account.entity';
+import { AccountType, Currency } from '../accounts.schema';
 
 export class CreateAccountDto {
-  @IsUUID('4', { message: 'O ID do cliente deve ser um UUID válido' })
+  @IsMongoId({ message: 'O ID do originator deve ser um ID válido do MongoDB' })
   @IsNotEmpty()
   clientId: string;
 

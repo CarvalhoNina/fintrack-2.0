@@ -1,45 +1,45 @@
 import { Injectable } from '@nestjs/common';
-import { Transaction } from './transaction.entity';
+import { Transaction, TransactionDocument } from './transaction.schema';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { CreateTransactionDto } from './DTO/create-transaction.dto';
+import { UpdateTransactionDto } from './DTO/update-transaction.dto';
 
 @Injectable()
 export class TransactionsRepository {
-  private readonly _transactions: Transaction[] = [];
+  constructor(
+    @InjectModel(Transaction.name)
+    private readonly _transactionModel: Model<TransactionDocument>,
+  ) {}
 
-  save(transaction: Transaction): Transaction {
-    if (!transaction.id) {
-      transaction.id = Math.random().toString(36).substring(7);
-      this._transactions.push(transaction);
-      return transaction;
-    }
-
-    const index = this._transactions.findIndex((t) => t.id === transaction.id);
-
-    if (index !== -1) {
-      this._transactions[index] = transaction;
-    } else {
-      this._transactions.push(transaction);
-    }
-
-    return transaction;
+  async save(dto: CreateTransactionDto): Promise<TransactionDocument> {
+    const createdTransaction = new this._transactionModel(dto);
+    return await createdTransaction.save();
   }
 
-  findAll(): Transaction[] {
-    return [...this._transactions];
+  async findAll(): Promise<Transaction[]> {
+    return await this._transactionModel
+      .find()
+      .populate('category originator account')
+      .exec();
   }
 
-  findById(id: string): Transaction | undefined {
-    return this._transactions.find((t) => t.id === id);
+  async findById(id: string): Promise<Transaction | null> {
+    return await this._transactionModel.findById(id).exec();
   }
 
-  delete(id: string): boolean {
-    const index = this._transactions.findIndex((t) => t.id === id);
+  async update(
+    id: string,
+    dto: UpdateTransactionDto,
+  ): Promise<TransactionDocument | null> {
+    return await this._transactionModel
+      .findByIdAndUpdate(id, dto, { new: true })
+      .populate('category originator account')
+      .exec();
+  }
 
-    if (index === -1) {
-      return false;
-    }
-
-    this._transactions.splice(index, 1);
-
-    return true;
+  async delete(id: string): Promise<boolean> {
+    const result = await this._transactionModel.findByIdAndDelete(id).exec();
+    return !!result;
   }
 }

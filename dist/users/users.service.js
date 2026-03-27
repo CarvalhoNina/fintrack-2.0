@@ -9,54 +9,43 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ClientsService = void 0;
+exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const users_repository_1 = require("./users.repository");
-const user_entity_1 = require("./user.entity");
-let ClientsService = class ClientsService {
-    _repository;
-    constructor(_repository) {
-        this._repository = _repository;
+let UsersService = class UsersService {
+    _usersRepository;
+    constructor(_usersRepository) {
+        this._usersRepository = _usersRepository;
     }
-    findAll() {
-        return this._repository.findAll();
+    async create(dto) {
+        return await this._usersRepository.save(dto);
     }
-    findOne(id) {
-        const client = this._repository.findById(id);
-        if (!client) {
-            return null;
+    async findAll() {
+        return await this._usersRepository.findAll();
+    }
+    async findOne(id) {
+        const user = await this._usersRepository.findById(id);
+        if (!user) {
+            throw new common_1.NotFoundException('Usuário não encontrado.');
         }
-        return client;
+        return user;
     }
-    create(firstName, lastName, address, email, password) {
-        const newClient = new user_entity_1.Client({
-            firstName,
-            lastName,
-            email: email.toLowerCase(),
-            address,
-            password,
-        });
-        return this._repository.save(newClient);
-    }
-    remove(id) {
-        const client = this._repository.findById(id);
-        if (!client) {
-            return false;
+    async update(id, dto) {
+        await this.findOne(id);
+        const updatedUser = await this._usersRepository.update(id, dto);
+        if (!updatedUser) {
+            throw new Error('Erro ao atualizar usuário.');
         }
-        return this._repository.delete(id);
+        return updatedUser;
     }
-    update(id, data) {
-        const client = this.findOne(id);
-        if (!client) {
-            return null;
-        }
-        Object.assign(client, data);
-        return this._repository.save(client);
+    async remove(id) {
+        await this.findOne(id);
+        return await this._usersRepository.delete(id);
     }
 };
-exports.ClientsService = ClientsService;
-exports.ClientsService = ClientsService = __decorate([
+exports.UsersService = UsersService;
+exports.UsersService = UsersService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [users_repository_1.ClientsRepository])
-], ClientsService);
+    __metadata("design:paramtypes", [users_repository_1.UsersRepository])
+], UsersService);
 //# sourceMappingURL=users.service.js.map

@@ -10,13 +10,22 @@ exports.CategoriesModule = void 0;
 const common_1 = require("@nestjs/common");
 const categories_controller_1 = require("./categories.controller");
 const categories_service_1 = require("./categories.service");
+const categories_repository_1 = require("./categories.repository");
+const mongoose_1 = require("@nestjs/mongoose");
+const categories_schema_1 = require("./categories.schema");
 let CategoriesModule = class CategoriesModule {
 };
 exports.CategoriesModule = CategoriesModule;
 exports.CategoriesModule = CategoriesModule = __decorate([
     (0, common_1.Module)({
+        imports: [
+            mongoose_1.MongooseModule.forFeature([
+                { name: categories_schema_1.Category.name, schema: categories_schema_1.CategorySchema },
+            ]),
+        ],
         controllers: [categories_controller_1.CategoriesController],
-        providers: [categories_service_1.CategoriesService],
+        providers: [categories_service_1.CategoriesService, categories_repository_1.CategoriesRepository],
+        exports: [categories_service_1.CategoriesService, categories_repository_1.CategoriesRepository],
     })
 ], CategoriesModule);
 //# sourceMappingURL=categories.module.js.map

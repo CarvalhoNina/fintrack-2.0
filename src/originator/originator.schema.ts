@@ -6,29 +6,18 @@ export type OriginatorDocument = HydratedDocument<Originator>;
 
 @Schema({ timestamps: true })
 export class Originator {
-  @Prop({ name: 'longName', required: true })
-  private _longName: string;
+  @Prop({ required: true })
+  private longName: string;
 
-  @Prop({ name: 'shortName', required: true })
-  private _shortName: string;
+  @Prop({ required: true })
+  private shortName: string;
 
   @Prop({
     type: Types.ObjectId,
     ref: 'Category',
     required: true,
   })
-  private _category: Category;
-
-  get longName(): string {
-    return this._longName;
-  }
-  get shortName(): string {
-    return this._shortName;
-  }
-
-  get category(): Category {
-    return this._category;
-  }
+  private category: Category;
 }
 
 export const OriginatorSchema = SchemaFactory.createForClass(Originator);

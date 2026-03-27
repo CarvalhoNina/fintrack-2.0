@@ -15,26 +15,27 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AccountsController = void 0;
 const common_1 = require("@nestjs/common");
 const accounts_service_1 = require("./accounts.service");
-const account_entity_1 = require("./account.entity");
+const create_account_dto_1 = require("./DTO/create-account.dto");
+const update_account_dto_1 = require("./DTO/update-account.dto");
 let AccountsController = class AccountsController {
-    _service;
-    constructor(_service) {
-        this._service = _service;
+    _accountsService;
+    constructor(_accountsService) {
+        this._accountsService = _accountsService;
     }
-    findAll() {
-        return this._service.findAll();
+    async findAll() {
+        return await this._accountsService.findAll();
     }
-    findOne(id) {
-        return this._service.findOne(id);
+    async findOne(id) {
+        return await this._accountsService.findOne(id);
     }
-    create(clientId, bankName, type, currency, balance) {
-        return this._service.create(clientId, bankName, type, currency, balance);
+    async create(createAccountDto) {
+        return await this._accountsService.create(createAccountDto);
     }
-    update(id, data) {
-        return this._service.update(id, data);
+    async update(id, updateAccountDto) {
+        return await this._accountsService.update(id, updateAccountDto);
     }
-    remove(id) {
-        return this._service.remove(id);
+    async remove(id) {
+        return await this._accountsService.remove(id);
     }
 };
 exports.AccountsController = AccountsController;
@@ -42,40 +43,36 @@ __decorate([
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Array)
+    __metadata("design:returntype", Promise)
 ], AccountsController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Object)
+    __metadata("design:returntype", Promise)
 ], AccountsController.prototype, "findOne", null);
 __decorate([
     (0, common_1.Post)(),
-    __param(0, (0, common_1.Body)('clientId')),
-    __param(1, (0, common_1.Body)('bankName')),
-    __param(2, (0, common_1.Body)('type')),
-    __param(3, (0, common_1.Body)('currency')),
-    __param(4, (0, common_1.Body)('balance')),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, String, String, String, Number]),
-    __metadata("design:returntype", account_entity_1.Account)
+    __metadata("design:paramtypes", [create_account_dto_1.CreateAccountDto]),
+    __metadata("design:returntype", Promise)
 ], AccountsController.prototype, "create", null);
 __decorate([
     (0, common_1.Patch)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", Object)
+    __metadata("design:paramtypes", [String, update_account_dto_1.UpdateAccountDto]),
+    __metadata("design:returntype", Promise)
 ], AccountsController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
-    __metadata("design:returntype", Boolean)
+    __metadata("design:returntype", Promise)
 ], AccountsController.prototype, "remove", null);
 exports.AccountsController = AccountsController = __decorate([
     (0, common_1.Controller)('accounts'),

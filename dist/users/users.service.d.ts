@@ -1,11 +1,13 @@
-import { ClientsRepository } from './users.repository';
-import { Client } from './user.entity';
-export declare class ClientsService {
-    private readonly _repository;
-    constructor(_repository: ClientsRepository);
-    findAll(): Client[];
-    findOne(id: string): Client | null;
-    create(firstName: string, lastName: string, address: string, email: string, password: string): Client;
-    remove(id: string): boolean;
-    update(id: string, data: Partial<Client>): Client | null;
+import { UsersRepository } from './users.repository';
+import { CreateUserDto } from './DTO/create-user.dto';
+import { UpdateUserDto } from './DTO/update-user.dto';
+import { UserDocument } from './user.schema';
+export declare class UsersService {
+    private readonly _usersRepository;
+    constructor(_usersRepository: UsersRepository);
+    create(dto: CreateUserDto): Promise<UserDocument>;
+    findAll(): Promise<UserDocument[]>;
+    findOne(id: string): Promise<UserDocument>;
+    update(id: string, dto: UpdateUserDto): Promise<UserDocument>;
+    remove(id: string): Promise<boolean>;
 }

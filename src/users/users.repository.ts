@@ -1,40 +1,38 @@
 import { Injectable } from '@nestjs/common';
-import { User } from './user.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { User, UserDocument } from './user.schema';
+import { Model } from 'mongoose';
+import { CreateUserDto } from './DTO/create-user.dto';
+import { UpdateUserDto } from './DTO/update-user.dto';
 
 @Injectable()
 export class UsersRepository {
-  private readonly _users: User[] = [];
+  constructor(
+    @InjectModel(User.name)
+    private readonly _userModel: Model<UserDocument>,
+  ) {}
 
-  save(user: User): User {
-    if (!user.id) {
-      user.id = Math.random().toString(36).substring(7);
-      this._users.push(user);
-    } else {
-      const index = this._users.findIndex((u) => u.id === user.id);
-      if (index !== -1) {
-        this._users[index] = user;
-      }
-    }
-    return user;
+  async save(dto: CreateUserDto): Promise<UserDocument> {
+    const createdUser = new this._userModel(dto);
+    return await createdUser.save();
   }
 
-  findAll(): User[] {
-    return [...this._users];
+  async findAll(): Promise<UserDocument[]> {
+    return await this._userModel.find().exec();
   }
 
-  findById(id: string): User | undefined {
-    return this._users.find((t) => t.id === id);
+  async findById(id: string): Promise<UserDocument | null> {
+    return await this._userModel.findById(id).exec();
   }
 
-  delete(id: string): boolean {
-    const index = this._users.findIndex((user) => user.id === id);
+  async update(id: string, dto: UpdateUserDto): Promise<UserDocument | null> {
+    return await this._userModel
+      .findByIdAndUpdate(id, dto, { new: true })
+      .exec();
+  }
 
-    if (index === -1) {
-      return false;
-    }
-
-    this._users.splice(index, 1);
-
-    return true;
+  async delete(id: string): Promise<boolean> {
+    const result = await this._userModel.findByIdAndDelete(id).exec();
+    return !!result;
   }
 }

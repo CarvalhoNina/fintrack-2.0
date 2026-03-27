@@ -12,46 +12,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AccountsService = void 0;
 const common_1 = require("@nestjs/common");
 const accounts_repository_1 = require("./accounts.repository");
-const account_entity_1 = require("./account.entity");
 let AccountsService = class AccountsService {
-    _repository;
-    constructor(_repository) {
-        this._repository = _repository;
+    _accountsRepository;
+    constructor(_accountsRepository) {
+        this._accountsRepository = _accountsRepository;
     }
-    findAll() {
-        return this._repository.findAll();
+    async findAll() {
+        return await this._accountsRepository.findAll();
     }
-    findOne(id) {
-        const account = this._repository.findById(id);
+    async findOne(id) {
+        const account = await this._accountsRepository.findById(id);
         if (!account) {
-            return null;
+            throw new common_1.NotFoundException(`Conta com ID ${id} não encontrada`);
         }
         return account;
     }
-    create(clientId, bankName, type, currency, balance = 0) {
-        const newAccount = new account_entity_1.Account({
-            clientId,
-            bankName,
-            type,
-            currency,
-            balance,
-        });
-        return this._repository.save(newAccount);
+    async create(dto) {
+        return await this._accountsRepository.save(dto);
     }
-    remove(id) {
-        const account = this._repository.findById(id);
-        if (!account) {
-            return false;
+    async update(id, dto) {
+        await this.findOne(id);
+        const updatedAccount = await this._accountsRepository.update(id, dto);
+        if (!updatedAccount) {
+            throw new common_1.NotFoundException(`Erro ao atualizar a conta com ID ${id}`);
         }
-        return this._repository.delete(id);
+        return updatedAccount;
     }
-    update(id, data) {
-        const account = this.findOne(id);
-        if (!account) {
-            return null;
-        }
-        Object.assign(account, data);
-        return this._repository.save(account);
+    async remove(id) {
+        await this.findOne(id);
+        return await this._accountsRepository.delete(id);
     }
 };
 exports.AccountsService = AccountsService;

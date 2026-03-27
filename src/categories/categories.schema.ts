@@ -27,18 +27,11 @@ export type CategoryDocument = HydratedDocument<Category>;
 
 @Schema({ timestamps: true })
 export class Category {
-  @Prop({ name: 'type', required: true, enum: CategoryType })
-  private _type: CategoryType;
+  @Prop({ required: true, enum: CategoryType })
+  type: CategoryType;
 
-  @Prop({ name: 'subtype', required: true, enum: CategorySubtype })
-  private _subtype: CategorySubtype;
-
-  get type(): CategoryType {
-    return this._type;
-  }
-  get subtype(): CategorySubtype {
-    return this._subtype;
-  }
+  @Prop({ required: true, enum: CategorySubtype })
+  subtype: CategorySubtype;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);

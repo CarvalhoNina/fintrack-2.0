@@ -1,11 +1,13 @@
 import { AccountsService } from './accounts.service';
-import { Account, AccountType, Currency } from './account.entity';
+import { Account } from './accounts.schema';
+import { CreateAccountDto } from './DTO/create-account.dto';
+import { UpdateAccountDto } from './DTO/update-account.dto';
 export declare class AccountsController {
-    private readonly _service;
-    constructor(_service: AccountsService);
-    findAll(): Account[];
-    findOne(id: string): Account | null;
-    create(clientId: string, bankName: string, type: AccountType, currency: Currency, balance?: number): Account;
-    update(id: string, data: Partial<Account>): Account | null;
-    remove(id: string): boolean;
+    private readonly _accountsService;
+    constructor(_accountsService: AccountsService);
+    findAll(): Promise<Account[]>;
+    findOne(id: string): Promise<Account | null>;
+    create(createAccountDto: CreateAccountDto): Promise<Account>;
+    update(id: string, updateAccountDto: UpdateAccountDto): Promise<Account>;
+    remove(id: string): Promise<boolean>;
 }

@@ -5,35 +5,47 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ClientsRepository = void 0;
+exports.UsersRepository = void 0;
 const common_1 = require("@nestjs/common");
-let ClientsRepository = class ClientsRepository {
-    _clients = [];
-    save(client) {
-        if (!client.id) {
-            client.id = Math.random().toString(36).substring(7);
-        }
-        this._clients.push(client);
-        return client;
+const mongoose_1 = require("@nestjs/mongoose");
+const user_schema_1 = require("./user.schema");
+const mongoose_2 = require("mongoose");
+let UsersRepository = class UsersRepository {
+    _userModel;
+    constructor(_userModel) {
+        this._userModel = _userModel;
     }
-    findAll() {
-        return [...this._clients];
+    async save(dto) {
+        const createdUser = new this._userModel(dto);
+        return await createdUser.save();
     }
-    findById(id) {
-        return this._clients.find((t) => t.id === id);
+    async findAll() {
+        return await this._userModel.find().exec();
     }
-    delete(id) {
-        const index = this._clients.findIndex((client) => client.id === id);
-        if (index === -1) {
-            return false;
-        }
-        this._clients.splice(index, 1);
-        return true;
+    async findById(id) {
+        return await this._userModel.findById(id).exec();
+    }
+    async update(id, dto) {
+        return await this._userModel
+            .findByIdAndUpdate(id, dto, { new: true })
+            .exec();
+    }
+    async delete(id) {
+        const result = await this._userModel.findByIdAndDelete(id).exec();
+        return !!result;
     }
 };
-exports.ClientsRepository = ClientsRepository;
-exports.ClientsRepository = ClientsRepository = __decorate([
-    (0, common_1.Injectable)()
-], ClientsRepository);
+exports.UsersRepository = UsersRepository;
+exports.UsersRepository = UsersRepository = __decorate([
+    (0, common_1.Injectable)(),
+    __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
+    __metadata("design:paramtypes", [mongoose_2.Model])
+], UsersRepository);
 //# sourceMappingURL=users.repository.js.map

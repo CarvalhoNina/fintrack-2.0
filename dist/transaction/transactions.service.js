@@ -12,50 +12,58 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TransactionsService = void 0;
 const common_1 = require("@nestjs/common");
 const transactions_repository_1 = require("./transactions.repository");
-const transaction_entity_1 = require("./transaction.entity");
+const originators_repository_1 = require("../originator/originators.repository");
+const accounts_repository_1 = require("../accounts/accounts.repository");
+const categories_repository_1 = require("../categories/categories.repository");
 let TransactionsService = class TransactionsService {
-    _repository;
-    constructor(_repository) {
-        this._repository = _repository;
+    _transactionsRepository;
+    _originatorsRepository;
+    _accountsRepository;
+    _categoryRepository;
+    constructor(_transactionsRepository, _originatorsRepository, _accountsRepository, _categoryRepository) {
+        this._transactionsRepository = _transactionsRepository;
+        this._originatorsRepository = _originatorsRepository;
+        this._accountsRepository = _accountsRepository;
+        this._categoryRepository = _categoryRepository;
     }
-    findAll() {
-        return this._repository.findAll();
+    async findAll() {
+        return await this._transactionsRepository.findAll();
     }
-    findOne(id) {
-        return this._repository.findById(id) || null;
+    async findOne(id) {
+        return (await this._transactionsRepository.findById(id)) || null;
     }
-    create(description, amount) {
-        let label = 'General';
-        const descLower = description.toLowerCase();
-        if (descLower.includes('tim hortons') || descLower.includes('starbucks')) {
-            label = 'Coffee ☕';
+    async create(dto) {
+        const originator = await this._originatorsRepository.findById(dto.originatorId);
+        if (!originator) {
+            throw new common_1.NotFoundException('O Originator informado não existe.');
         }
-        else if (descLower.includes('walmart') ||
-            descLower.includes('no frills')) {
-            label = 'Groceries 🛒';
+        const account = await this._accountsRepository.findById(dto.accountId);
+        if (!account) {
+            throw new common_1.NotFoundException('A conta informada não existe.');
         }
-        const newTransaction = new transaction_entity_1.Transaction({
-            description,
-            amount,
-            label,
-            currency: 'CAD',
-        });
-        return this._repository.save(newTransaction);
+        const category = await this._categoryRepository.findById(dto.categoryId);
+        if (!category) {
+            throw new common_1.NotFoundException('A categoria informada não existe.');
+        }
+        return await this._transactionsRepository.save(dto);
     }
-    update(id, data) {
-        const transaction = this.findOne(id);
-        if (!transaction)
-            return null;
-        Object.assign(transaction, data);
-        return transaction;
+    async update(id, dto) {
+        const transaction = await this.findOne(id);
+        if (!transaction) {
+            throw new common_1.NotFoundException('Transação não encontrada.');
+        }
+        return await this._transactionsRepository.update(id, dto);
     }
-    remove(id) {
-        return this._repository.delete(id);
+    async remove(id) {
+        return this._transactionsRepository.delete(id);
     }
 };
 exports.TransactionsService = TransactionsService;
 exports.TransactionsService = TransactionsService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [transactions_repository_1.TransactionsRepository])
+    __metadata("design:paramtypes", [transactions_repository_1.TransactionsRepository,
+        originators_repository_1.OriginatorsRepository,
+        accounts_repository_1.AccountsRepository,
+        categories_repository_1.CategoriesRepository])
 ], TransactionsService);
 //# sourceMappingURL=transactions.service.js.map

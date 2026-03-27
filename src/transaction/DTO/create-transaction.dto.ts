@@ -1,9 +1,9 @@
 import {
   IsDateString,
+  IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsUUID,
 } from 'class-validator';
 
 export class CreateTransactionDto {
@@ -18,15 +18,15 @@ export class CreateTransactionDto {
   @IsOptional()
   date?: string;
 
-  @IsUUID('4', { message: 'O ID do originator deve ser valido' })
+  @IsMongoId({ message: 'O ID do originator deve ser um ID válido do MongoDB' })
   @IsNotEmpty()
   originatorId: string;
 
-  @IsUUID('4', { message: 'O ID da conta deve ser valido' })
+  @IsMongoId({ message: 'O ID do originator deve ser um ID válido do MongoDB' })
   @IsNotEmpty()
   accountId: string;
 
-  @IsUUID('4', { message: 'O ID da categoria deve ser valido' })
+  @IsMongoId({ message: 'O ID do originator deve ser um ID válido do MongoDB' })
   @IsNotEmpty()
   categoryId: string;
 }

@@ -15,5 +15,6 @@ import { CategoriesModule } from 'src/categories/categories.module';
   ],
   controllers: [OriginatorsController],
   providers: [OriginatorsService, OriginatorsRepository],
+  exports: [OriginatorsService, OriginatorsRepository],
 })
 export class OriginatorsModule {}
