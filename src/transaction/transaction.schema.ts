@@ -3,6 +3,7 @@ import { HydratedDocument, Types } from 'mongoose';
 import { Account } from 'src/accounts/accounts.schema';
 import { Category } from 'src/categories/categories.schema';
 import { Originator } from 'src/originator/originator.schema';
+import { User } from 'src/users/user.schema';
 
 export type TransactionDocument = HydratedDocument<Transaction>;
 
@@ -13,6 +14,13 @@ export class Transaction {
 
   @Prop({ type: Date, required: true })
   date: Date;
+
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'User',
+    required: true,
+  })
+  user: User;
 
   @Prop({
     type: Types.ObjectId,

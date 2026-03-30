@@ -1,4 +1,4 @@
-import { CategorySubtype, CategoryType } from '../categories.schema';
+import { CategoryType, CategorySubtype } from '../categories.schema';
 export declare class CreateCategoryDto {
     type: CategoryType;
     subtype: CategorySubtype;

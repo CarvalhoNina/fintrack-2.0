@@ -1,14 +1,13 @@
-import { IsEnum } from 'class-validator';
-import { CategorySubtype, CategoryType } from '../categories.schema';
+// DTO/create-category.dto.ts
+import { IsEnum, IsNotEmpty } from 'class-validator';
+import { CategoryType, CategorySubtype } from '../categories.schema';
 
 export class CreateCategoryDto {
-  @IsEnum(CategoryType, {
-    message: 'A categoria deve ser especificada',
-  })
+  @IsEnum(CategoryType, { message: 'O tipo deve ser income ou expense' })
+  @IsNotEmpty()
   type: CategoryType;
 
-  @IsEnum(CategorySubtype, {
-    message: 'o subtipo da categoria deve ser especificado',
-  })
+  @IsEnum(CategorySubtype, { message: 'Selecione um subtipo válido' })
+  @IsNotEmpty()
   subtype: CategorySubtype;
 }

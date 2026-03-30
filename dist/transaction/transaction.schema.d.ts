@@ -2,10 +2,12 @@ import { HydratedDocument, Types } from 'mongoose';
 import { Account } from 'src/accounts/accounts.schema';
 import { Category } from 'src/categories/categories.schema';
 import { Originator } from 'src/originator/originator.schema';
+import { User } from 'src/users/user.schema';
 export type TransactionDocument = HydratedDocument<Transaction>;
 export declare class Transaction {
     amount: number;
     date: Date;
+    user: User;
     originator: Originator;
     account: Account;
     category: Category;
@@ -39,6 +41,15 @@ export declare const TransactionSchema: import("mongoose").Schema<Transaction, i
         id: string;
     }> | undefined;
     date?: import("mongoose").SchemaDefinitionProperty<Date, Transaction, import("mongoose").Document<unknown, {}, Transaction, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<Transaction & {
+        _id: Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
+    user?: import("mongoose").SchemaDefinitionProperty<User, Transaction, import("mongoose").Document<unknown, {}, Transaction, {
         id: string;
     }, import("mongoose").DefaultSchemaOptions> & Omit<Transaction & {
         _id: Types.ObjectId;

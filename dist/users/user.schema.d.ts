@@ -1,10 +1,17 @@
 import { HydratedDocument } from 'mongoose';
 export type UserDocument = HydratedDocument<User>;
+declare class Address {
+    street: string;
+    city: string;
+    province: string;
+    postalCode: string;
+}
 export declare class User {
     firstName: string;
     lastName: string;
     email: string;
     password: string;
+    address: Address;
 }
 export declare const UserSchema: import("mongoose").Schema<User, import("mongoose").Model<User, any, any, any, (import("mongoose").Document<unknown, any, User, any, import("mongoose").DefaultSchemaOptions> & User & {
     _id: import("mongoose").Types.ObjectId;
@@ -61,4 +68,14 @@ export declare const UserSchema: import("mongoose").Schema<User, import("mongoos
     }, "id"> & {
         id: string;
     }> | undefined;
+    address?: import("mongoose").SchemaDefinitionProperty<Address, User, import("mongoose").Document<unknown, {}, User, {
+        id: string;
+    }, import("mongoose").DefaultSchemaOptions> & Omit<User & {
+        _id: import("mongoose").Types.ObjectId;
+    } & {
+        __v: number;
+    }, "id"> & {
+        id: string;
+    }> | undefined;
 }, User>;
+export {};

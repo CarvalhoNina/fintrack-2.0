@@ -20,12 +20,15 @@ export class TransactionsRepository {
   async findAll(): Promise<Transaction[]> {
     return await this._transactionModel
       .find()
-      .populate('category originator account')
+      .populate('user category originator account')
       .exec();
   }
 
-  async findById(id: string): Promise<Transaction | null> {
-    return await this._transactionModel.findById(id).exec();
+  async findById(id: string): Promise<TransactionDocument | null> {
+    return await this._transactionModel
+      .findById(id)
+      .populate('user category originator account')
+      .exec();
   }
 
   async update(
@@ -34,7 +37,7 @@ export class TransactionsRepository {
   ): Promise<TransactionDocument | null> {
     return await this._transactionModel
       .findByIdAndUpdate(id, dto, { new: true })
-      .populate('category originator account')
+      .populate('user category originator account')
       .exec();
   }
 

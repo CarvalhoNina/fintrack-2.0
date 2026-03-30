@@ -7,9 +7,9 @@ export declare class OriginatorsService {
     private readonly _originatorsRepository;
     private readonly _categoriesRepository;
     constructor(_originatorsRepository: OriginatorsRepository, _categoriesRepository: CategoriesRepository);
+    create(dto: CreateOriginatorDto): Promise<Originator>;
     findAll(): Promise<Originator[]>;
     findOne(id: string): Promise<Originator | null>;
-    create(dto: CreateOriginatorDto): Promise<Originator>;
     update(id: string, dto: UpdateOriginatorDto): Promise<Originator | null>;
     remove(id: string): Promise<boolean>;
 }

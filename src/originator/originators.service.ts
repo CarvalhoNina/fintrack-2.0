@@ -12,6 +12,15 @@ export class OriginatorsService {
     private readonly _categoriesRepository: CategoriesRepository,
   ) {}
 
+  async create(dto: CreateOriginatorDto): Promise<Originator> {
+    const category = await this._categoriesRepository.findById(dto.category);
+    if (!category) {
+      throw new NotFoundException(`A categoria informada não existe`);
+    }
+
+    return await this._originatorsRepository.save(dto);
+  }
+
   async findAll(): Promise<Originator[]> {
     return await this._originatorsRepository.findAll();
   }
@@ -24,21 +33,12 @@ export class OriginatorsService {
     return originator;
   }
 
-  async create(dto: CreateOriginatorDto): Promise<Originator> {
-    const category = await this._categoriesRepository.findById(dto.categoryId);
-    if (!category) {
-      throw new NotFoundException(`A categoria informada não existe`);
-    }
-
-    return await this._originatorsRepository.save(dto);
-  }
-
   async update(
     id: string,
     dto: UpdateOriginatorDto,
   ): Promise<Originator | null> {
     await this.findOne(id);
-    const newCategoryIdProvided = dto.categoryId;
+    const newCategoryIdProvided = dto.category;
 
     if (newCategoryIdProvided) {
       const categoryFoundInDb = await this._categoriesRepository.findById(

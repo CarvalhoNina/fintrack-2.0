@@ -18,15 +18,19 @@ export class CreateTransactionDto {
   @IsOptional()
   date?: string;
 
-  @IsMongoId({ message: 'O ID do originator deve ser um ID válido do MongoDB' })
+  @IsMongoId({ message: 'O ID do usuario deve ser um ID válido do MongoDB' })
   @IsNotEmpty()
-  originatorId: string;
+  user: string;
 
   @IsMongoId({ message: 'O ID do originator deve ser um ID válido do MongoDB' })
   @IsNotEmpty()
-  accountId: string;
+  originator: string;
 
   @IsMongoId({ message: 'O ID do originator deve ser um ID válido do MongoDB' })
   @IsNotEmpty()
-  categoryId: string;
+  account: string;
+
+  @IsMongoId({ message: 'O ID do originator deve ser um ID válido do MongoDB' })
+  @IsNotEmpty()
+  category: string;
 }

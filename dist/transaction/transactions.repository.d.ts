@@ -7,7 +7,7 @@ export declare class TransactionsRepository {
     constructor(_transactionModel: Model<TransactionDocument>);
     save(dto: CreateTransactionDto): Promise<TransactionDocument>;
     findAll(): Promise<Transaction[]>;
-    findById(id: string): Promise<Transaction | null>;
+    findById(id: string): Promise<TransactionDocument | null>;
     update(id: string, dto: UpdateTransactionDto): Promise<TransactionDocument | null>;
     delete(id: string): Promise<boolean>;
 }

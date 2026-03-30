@@ -15,9 +15,11 @@ const mongoose_2 = require("mongoose");
 const accounts_schema_1 = require("../accounts/accounts.schema");
 const categories_schema_1 = require("../categories/categories.schema");
 const originator_schema_1 = require("../originator/originator.schema");
+const user_schema_1 = require("../users/user.schema");
 let Transaction = class Transaction {
     amount;
     date;
+    user;
     originator;
     account;
     category;
@@ -31,6 +33,14 @@ __decorate([
     (0, mongoose_1.Prop)({ type: Date, required: true }),
     __metadata("design:type", Date)
 ], Transaction.prototype, "date", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: mongoose_2.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    }),
+    __metadata("design:type", user_schema_1.User)
+], Transaction.prototype, "user", void 0);
 __decorate([
     (0, mongoose_1.Prop)({
         type: mongoose_2.Types.ObjectId,

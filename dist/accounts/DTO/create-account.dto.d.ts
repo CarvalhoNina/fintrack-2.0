@@ -1,7 +1,7 @@
-import { AccountType, Currency } from '../accounts.schema';
+import { AccountType, BankName, Currency } from '../accounts.schema';
 export declare class CreateAccountDto {
-    clientId: string;
-    bankName: string;
+    user: string;
+    bankName: BankName;
     type: AccountType;
     currency: Currency;
     balance?: number;

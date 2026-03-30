@@ -20,6 +20,13 @@ let OriginatorsService = class OriginatorsService {
         this._originatorsRepository = _originatorsRepository;
         this._categoriesRepository = _categoriesRepository;
     }
+    async create(dto) {
+        const category = await this._categoriesRepository.findById(dto.category);
+        if (!category) {
+            throw new common_1.NotFoundException(`A categoria informada não existe`);
+        }
+        return await this._originatorsRepository.save(dto);
+    }
     async findAll() {
         return await this._originatorsRepository.findAll();
     }
@@ -30,16 +37,9 @@ let OriginatorsService = class OriginatorsService {
         }
         return originator;
     }
-    async create(dto) {
-        const category = await this._categoriesRepository.findById(dto.categoryId);
-        if (!category) {
-            throw new common_1.NotFoundException(`A categoria informada não existe`);
-        }
-        return await this._originatorsRepository.save(dto);
-    }
     async update(id, dto) {
         await this.findOne(id);
-        const newCategoryIdProvided = dto.categoryId;
+        const newCategoryIdProvided = dto.category;
         if (newCategoryIdProvided) {
             const categoryFoundInDb = await this._categoriesRepository.findById(newCategoryIdProvided);
             const categoryExists = categoryFoundInDb !== null;

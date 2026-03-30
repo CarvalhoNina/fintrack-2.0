@@ -6,6 +6,7 @@ import { CategoriesRepository } from 'src/categories/categories.repository';
 import { CreateTransactionDto } from './DTO/create-transaction.dto';
 import { UpdateTransactionDto } from './DTO/update-transaction.dto';
 import { Transaction } from './transaction.schema';
+import { UsersRepository } from 'src/users/users.repository';
 
 @Injectable()
 export class TransactionsService {
@@ -14,7 +15,26 @@ export class TransactionsService {
     private readonly _originatorsRepository: OriginatorsRepository,
     private readonly _accountsRepository: AccountsRepository,
     private readonly _categoryRepository: CategoriesRepository,
+    private readonly _usersRepository: UsersRepository,
   ) {}
+
+  async create(dto: CreateTransactionDto): Promise<Transaction> {
+    const user = await this._usersRepository.findById(dto.user);
+    if (!user) throw new NotFoundException('O usuário não existe.');
+
+    const originator = await this._originatorsRepository.findById(
+      dto.originator,
+    );
+    if (!originator) throw new NotFoundException('Originator não existe.');
+
+    const account = await this._accountsRepository.findById(dto.account);
+    if (!account) throw new NotFoundException('A conta não existe.');
+
+    const category = await this._categoryRepository.findById(dto.category);
+    if (!category) throw new NotFoundException('A categoria não existe.');
+
+    return await this._transactionsRepository.save(dto);
+  }
 
   async findAll(): Promise<Transaction[]> {
     return await this._transactionsRepository.findAll();
@@ -22,27 +42,6 @@ export class TransactionsService {
 
   async findOne(id: string): Promise<Transaction | null> {
     return (await this._transactionsRepository.findById(id)) || null;
-  }
-
-  async create(dto: CreateTransactionDto): Promise<Transaction> {
-    const originator = await this._originatorsRepository.findById(
-      dto.originatorId,
-    );
-    if (!originator) {
-      throw new NotFoundException('O Originator informado não existe.');
-    }
-
-    const account = await this._accountsRepository.findById(dto.accountId);
-    if (!account) {
-      throw new NotFoundException('A conta informada não existe.');
-    }
-
-    const category = await this._categoryRepository.findById(dto.categoryId);
-    if (!category) {
-      throw new NotFoundException('A categoria informada não existe.');
-    }
-
-    return await this._transactionsRepository.save(dto);
   }
 
   async update(

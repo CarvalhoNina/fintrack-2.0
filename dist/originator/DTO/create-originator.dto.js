@@ -14,7 +14,7 @@ const class_validator_1 = require("class-validator");
 class CreateOriginatorDto {
     longName;
     shortName;
-    categoryId;
+    category;
 }
 exports.CreateOriginatorDto = CreateOriginatorDto;
 __decorate([
@@ -30,5 +30,5 @@ __decorate([
     (0, class_validator_1.IsMongoId)({ message: 'O ID da categoria deve ser um ObjectId válido' }),
     (0, class_validator_1.IsNotEmpty)({ message: 'A categoria é obrigatória' }),
     __metadata("design:type", String)
-], CreateOriginatorDto.prototype, "categoryId", void 0);
+], CreateOriginatorDto.prototype, "category", void 0);
 //# sourceMappingURL=create-originator.dto.js.map

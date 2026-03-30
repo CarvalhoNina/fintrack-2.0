@@ -14,9 +14,10 @@ const class_validator_1 = require("class-validator");
 class CreateTransactionDto {
     amount;
     date;
-    originatorId;
-    accountId;
-    categoryId;
+    user;
+    originator;
+    account;
+    category;
 }
 exports.CreateTransactionDto = CreateTransactionDto;
 __decorate([
@@ -30,18 +31,23 @@ __decorate([
     __metadata("design:type", String)
 ], CreateTransactionDto.prototype, "date", void 0);
 __decorate([
-    (0, class_validator_1.IsMongoId)({ message: 'O ID do originator deve ser um ID válido do MongoDB' }),
+    (0, class_validator_1.IsMongoId)({ message: 'O ID do usuario deve ser um ID válido do MongoDB' }),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], CreateTransactionDto.prototype, "originatorId", void 0);
+], CreateTransactionDto.prototype, "user", void 0);
 __decorate([
     (0, class_validator_1.IsMongoId)({ message: 'O ID do originator deve ser um ID válido do MongoDB' }),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], CreateTransactionDto.prototype, "accountId", void 0);
+], CreateTransactionDto.prototype, "originator", void 0);
 __decorate([
     (0, class_validator_1.IsMongoId)({ message: 'O ID do originator deve ser um ID válido do MongoDB' }),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], CreateTransactionDto.prototype, "categoryId", void 0);
+], CreateTransactionDto.prototype, "account", void 0);
+__decorate([
+    (0, class_validator_1.IsMongoId)({ message: 'O ID do originator deve ser um ID válido do MongoDB' }),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], CreateTransactionDto.prototype, "category", void 0);
 //# sourceMappingURL=create-transaction.dto.js.map

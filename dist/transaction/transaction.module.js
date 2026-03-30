@@ -16,6 +16,7 @@ const accounts_module_1 = require("../accounts/accounts.module");
 const categories_module_1 = require("../categories/categories.module");
 const mongoose_1 = require("@nestjs/mongoose");
 const transaction_schema_1 = require("./transaction.schema");
+const users_module_1 = require("../users/users.module");
 let TransactionModule = class TransactionModule {
 };
 exports.TransactionModule = TransactionModule;
@@ -28,6 +29,7 @@ exports.TransactionModule = TransactionModule = __decorate([
             categories_module_1.CategoriesModule,
             accounts_module_1.AccountsModule,
             originator_module_1.OriginatorsModule,
+            users_module_1.UsersModule,
         ],
         controllers: [transactions_controller_1.TransactionsController],
         providers: [transactions_service_1.TransactionsService, transactions_repository_1.TransactionsRepository],

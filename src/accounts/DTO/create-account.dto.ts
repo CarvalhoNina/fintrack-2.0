@@ -4,18 +4,17 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
-  IsString,
 } from 'class-validator';
-import { AccountType, Currency } from '../accounts.schema';
+import { AccountType, BankName, Currency } from '../accounts.schema';
 
 export class CreateAccountDto {
-  @IsMongoId({ message: 'O ID do originator deve ser um ID válido do MongoDB' })
+  @IsMongoId({ message: 'O ID do usuário deve ser um ID válido' })
   @IsNotEmpty()
-  clientId: string;
+  user: string;
 
-  @IsString({ message: 'O nome do banco deve ser um texto' })
-  @IsNotEmpty({ message: 'O nome do banco é obrigatório' })
-  bankName: string;
+  @IsEnum({ BankName, message: 'selecione um banco válido da lista' })
+  @IsNotEmpty()
+  bankName: BankName;
 
   @IsEnum(AccountType, {
     message: 'O tipo de conta deve ser: checking, savings ou credit',

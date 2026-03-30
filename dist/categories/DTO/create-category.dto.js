@@ -18,15 +18,13 @@ class CreateCategoryDto {
 }
 exports.CreateCategoryDto = CreateCategoryDto;
 __decorate([
-    (0, class_validator_1.IsEnum)(categories_schema_1.CategoryType, {
-        message: 'A categoria deve ser especificada',
-    }),
+    (0, class_validator_1.IsEnum)(categories_schema_1.CategoryType, { message: 'O tipo deve ser income ou expense' }),
+    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateCategoryDto.prototype, "type", void 0);
 __decorate([
-    (0, class_validator_1.IsEnum)(categories_schema_1.CategorySubtype, {
-        message: 'o subtipo da categoria deve ser especificado',
-    }),
+    (0, class_validator_1.IsEnum)(categories_schema_1.CategorySubtype, { message: 'Selecione um subtipo válido' }),
+    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateCategoryDto.prototype, "subtype", void 0);
 //# sourceMappingURL=create-category.dto.js.map

@@ -7,6 +7,7 @@ import { AccountsModule } from 'src/accounts/accounts.module';
 import { CategoriesModule } from 'src/categories/categories.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Transaction, TransactionSchema } from './transaction.schema';
+import { UsersModule } from 'src/users/users.module';
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -15,6 +16,7 @@ import { Transaction, TransactionSchema } from './transaction.schema';
     CategoriesModule,
     AccountsModule,
     OriginatorsModule,
+    UsersModule,
   ],
   controllers: [TransactionsController],
   providers: [TransactionsService, TransactionsRepository],

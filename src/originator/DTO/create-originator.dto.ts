@@ -10,5 +10,5 @@ export class CreateOriginatorDto {
 
   @IsMongoId({ message: 'O ID da categoria deve ser um ObjectId válido' })
   @IsNotEmpty({ message: 'A categoria é obrigatória' })
-  categoryId: string;
+  category: string;
 }

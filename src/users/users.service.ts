@@ -8,6 +8,7 @@ import { UpdateUserDto } from './DTO/update-user.dto';
 @Injectable()
 export class UsersService {
   constructor(private readonly _usersRepository: UsersRepository) {}
+
   async create(dto: CreateUserDto): Promise<UserDocument> {
     const salt = await bcrypt.genSalt();
 
@@ -20,6 +21,7 @@ export class UsersService {
 
     return await this._usersRepository.save(userToSave);
   }
+
   async findAll(): Promise<UserDocument[]> {
     return await this._usersRepository.findAll();
   }

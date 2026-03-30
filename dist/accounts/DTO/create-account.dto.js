@@ -13,7 +13,7 @@ exports.CreateAccountDto = void 0;
 const class_validator_1 = require("class-validator");
 const accounts_schema_1 = require("../accounts.schema");
 class CreateAccountDto {
-    clientId;
+    user;
     bankName;
     type;
     currency;
@@ -21,13 +21,13 @@ class CreateAccountDto {
 }
 exports.CreateAccountDto = CreateAccountDto;
 __decorate([
-    (0, class_validator_1.IsMongoId)({ message: 'O ID do originator deve ser um ID válido do MongoDB' }),
+    (0, class_validator_1.IsMongoId)({ message: 'O ID do usuário deve ser um ID válido' }),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], CreateAccountDto.prototype, "clientId", void 0);
+], CreateAccountDto.prototype, "user", void 0);
 __decorate([
-    (0, class_validator_1.IsString)({ message: 'O nome do banco deve ser um texto' }),
-    (0, class_validator_1.IsNotEmpty)({ message: 'O nome do banco é obrigatório' }),
+    (0, class_validator_1.IsEnum)({ BankName: accounts_schema_1.BankName, message: 'selecione um banco válido da lista' }),
+    (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateAccountDto.prototype, "bankName", void 0);
 __decorate([

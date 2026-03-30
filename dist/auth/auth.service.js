@@ -26,9 +26,7 @@ let AuthService = class AuthService {
         if (user) {
             const isMatch = await bcrypt.compare(pass, user.password);
             if (isMatch) {
-                const userObject = user.toObject();
-                const { password: _, ...result } = userObject;
-                return result;
+                return user;
             }
         }
         throw new common_1.UnauthorizedException('E-mail ou senha incorretos.');

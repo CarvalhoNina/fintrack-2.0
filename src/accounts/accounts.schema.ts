@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
+import { User } from 'src/users/user.schema';
 
 export enum Currency {
   BRL = 'BRL',
@@ -14,15 +15,30 @@ export enum AccountType {
   CREDIT = 'credit',
 }
 
+export enum BankName {
+  RBC = 'RBC',
+  TD = 'TD',
+  BMO = 'BMO',
+  SCOTIA = 'Scotiabank',
+  CIBC = 'CIBC',
+  SANTANDER = 'Santander',
+  NUBANK = 'Nubank',
+  OTHER = 'Other',
+}
+
 export type AccountDocument = HydratedDocument<Account>;
 
 @Schema({ timestamps: true })
 export class Account {
-  @Prop({ required: true })
-  clientId: string;
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'User',
+    required: true,
+  })
+  user: User;
 
-  @Prop({ required: true })
-  bankName: string;
+  @Prop({ required: true, enum: BankName })
+  bankName: BankName;
 
   @Prop({ required: true, enum: AccountType })
   type: AccountType;

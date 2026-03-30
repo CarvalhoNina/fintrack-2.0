@@ -29,16 +29,19 @@ let TransactionsRepository = class TransactionsRepository {
     async findAll() {
         return await this._transactionModel
             .find()
-            .populate('category originator account')
+            .populate('user category originator account')
             .exec();
     }
     async findById(id) {
-        return await this._transactionModel.findById(id).exec();
+        return await this._transactionModel
+            .findById(id)
+            .populate('user category originator account')
+            .exec();
     }
     async update(id, dto) {
         return await this._transactionModel
             .findByIdAndUpdate(id, dto, { new: true })
-            .populate('category originator account')
+            .populate('user category originator account')
             .exec();
     }
     async delete(id) {
