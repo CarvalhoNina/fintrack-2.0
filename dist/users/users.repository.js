@@ -32,6 +32,9 @@ let UsersRepository = class UsersRepository {
     async findById(id) {
         return await this._userModel.findById(id).exec();
     }
+    async findByEmail(email) {
+        return await this._userModel.findOne({ email }).exec();
+    }
     async update(id, dto) {
         return await this._userModel
             .findByIdAndUpdate(id, dto, { new: true })

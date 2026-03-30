@@ -25,6 +25,10 @@ export class UsersRepository {
     return await this._userModel.findById(id).exec();
   }
 
+  async findByEmail(email: string): Promise<UserDocument | null> {
+    return await this._userModel.findOne({ email }).exec();
+  }
+
   async update(id: string, dto: UpdateUserDto): Promise<UserDocument | null> {
     return await this._userModel
       .findByIdAndUpdate(id, dto, { new: true })

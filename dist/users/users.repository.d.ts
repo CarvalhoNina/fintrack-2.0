@@ -8,6 +8,7 @@ export declare class UsersRepository {
     save(dto: CreateUserDto): Promise<UserDocument>;
     findAll(): Promise<UserDocument[]>;
     findById(id: string): Promise<UserDocument | null>;
+    findByEmail(email: string): Promise<UserDocument | null>;
     update(id: string, dto: UpdateUserDto): Promise<UserDocument | null>;
     delete(id: string): Promise<boolean>;
 }

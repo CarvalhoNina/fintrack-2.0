@@ -12,13 +12,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersService = void 0;
 const common_1 = require("@nestjs/common");
 const users_repository_1 = require("./users.repository");
+const bcrypt = require("bcrypt");
 let UsersService = class UsersService {
     _usersRepository;
     constructor(_usersRepository) {
         this._usersRepository = _usersRepository;
     }
     async create(dto) {
-        return await this._usersRepository.save(dto);
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(dto.password, salt);
+        const userToSave = {
+            ...dto,
+            password: hashedPassword,
+        };
+        return await this._usersRepository.save(userToSave);
     }
     async findAll() {
         return await this._usersRepository.findAll();
@@ -30,8 +37,15 @@ let UsersService = class UsersService {
         }
         return user;
     }
+    async findByEmail(email) {
+        return await this._usersRepository.findByEmail(email);
+    }
     async update(id, dto) {
         await this.findOne(id);
+        if (dto.password) {
+            const salt = await bcrypt.genSalt();
+            dto.password = await bcrypt.hash(dto.password, salt);
+        }
         const updatedUser = await this._usersRepository.update(id, dto);
         if (!updatedUser) {
             throw new Error('Erro ao atualizar usuário.');
