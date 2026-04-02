@@ -6,13 +6,16 @@ import {
   Param,
   Patch,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './DTO/create-transaction.dto';
 import { UpdateTransactionDto } from './DTO/update-transaction.dto';
 import { Transaction } from './transaction.schema';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('transactions')
+@UseGuards(AuthGuard('jwt'))
 export class TransactionsController {
   constructor(private readonly _transactionsService: TransactionsService) {}
 

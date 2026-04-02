@@ -12,7 +12,7 @@ export class CreateAccountDto {
   @IsNotEmpty()
   user: string;
 
-  @IsEnum({ BankName, message: 'selecione um banco válido da lista' })
+  @IsEnum(BankName)
   @IsNotEmpty()
   bankName: BankName;
 

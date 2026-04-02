@@ -15,22 +15,36 @@ const categories_module_1 = require("./categories/categories.module");
 const dashboards_module_1 = require("./dashboards/dashboards.module");
 const mongoose_1 = require("@nestjs/mongoose");
 const auth_module_1 = require("./auth/auth.module");
+const config_1 = require("@nestjs/config");
+const originator_module_1 = require("./originator/originator.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            mongoose_1.MongooseModule.forRoot('mongodb://localhost:27017/fintrack_v3'),
+            config_1.ConfigModule.forRoot({
+                isGlobal: true,
+            }),
+            mongoose_1.MongooseModule.forRootAsync({
+                imports: [config_1.ConfigModule],
+                inject: [config_1.ConfigService],
+                useFactory: (configService) => {
+                    const uri = configService.get('DATABASE_URL');
+                    console.log('Sua URI no ENV é:', uri);
+                    return {
+                        uri: uri || 'mongodb://127.0.0.1:27017/fintrack_novo',
+                    };
+                },
+            }),
             users_module_1.UsersModule,
             transaction_module_1.TransactionModule,
             accounts_module_1.AccountsModule,
             categories_module_1.CategoriesModule,
             dashboards_module_1.DashboardsModule,
             auth_module_1.AuthModule,
+            originator_module_1.OriginatorsModule,
         ],
-        controllers: [],
-        providers: [],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

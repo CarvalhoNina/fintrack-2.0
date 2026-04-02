@@ -26,7 +26,7 @@ __decorate([
     __metadata("design:type", String)
 ], CreateAccountDto.prototype, "user", void 0);
 __decorate([
-    (0, class_validator_1.IsEnum)({ BankName: accounts_schema_1.BankName, message: 'selecione um banco válido da lista' }),
+    (0, class_validator_1.IsEnum)(accounts_schema_1.BankName),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
 ], CreateAccountDto.prototype, "bankName", void 0);

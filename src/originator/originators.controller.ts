@@ -6,13 +6,16 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CreateOriginatorDto } from './DTO/create-originator.dto.js';
 import { UpdateOriginatorDto } from './DTO/update-originator.dto.js';
 import { OriginatorsService } from './originators.service.js';
 import { Originator } from './originator.schema.js';
+import { AuthGuard } from '@nestjs/passport';
 
-@Controller('originator')
+@Controller('originators')
+@UseGuards(AuthGuard('jwt'))
 export class OriginatorsController {
   constructor(private readonly _originatorsService: OriginatorsService) {}
 
